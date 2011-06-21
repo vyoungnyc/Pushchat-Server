@@ -1,0 +1,2 @@
+php -f /srv/www/vhosts/pushchat.nard.ca/php-apns/push/PushMonitor.php >> error_monitor.log 2>&1 &
+
