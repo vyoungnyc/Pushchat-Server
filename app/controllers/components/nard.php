@@ -1,15 +1,10 @@
 <?php
 	App::import('Sanitize');
 	class NardComponent extends Object{
-//TODO: modify getSignature and validate/authenticate request to accept md5 or sha1 for hmac
-
-		
-
 
 	function generateSaltForDeviceToken($device_token = null){
           //check if user table contains device_token, if so send salt in user table through apn
           //if not in user table. create new user, populate device_token and salt. send salt to device
-//          echo "\nresults:";
 
           //device_token found
 	  $userInstance = ClassRegistry::init('User');
@@ -140,10 +135,6 @@
         	}
 
 		function authenticateRequest($params,$type){
-//return true;
-//                  echo "<br/>params are here:";
-//            	  print_r($params);
-//            	  echo "<br/>";
             	  if(isset($params['url']['device_id'])&&isset($params['url']['expire'])&&isset($params['url']['s'])){
                     if(isset($params['form']['body'])){
                       $msg = $params['url']['expire'].':'.$params['url']['url'].':'.$params['url']['device_id'].':'.$params['form']['body'];
@@ -152,21 +143,12 @@
                     }
                     
                     if($type=='device_id'){
-//                      $salt = $this->getSalt($params['url']['device_id']);
-//		      echo "<br/>".$salt['salt']." is salt <br/>";
-//		      echo "msg:".$msg." has signature: ".$this->getSignature($salt['salt'],$msg)." and time: ".time();
-//		      echo "<br/>";
-
 		      if($user_id = $this->validateRequest($params['url']['device_id'], $msg, $params['url']['expire'], $params['url']['s'],$type)){
                         return $user_id;
                       } else { 
 			return false;
 		      }
                     } else if ($type=='device_token'){
-//		      $salt = $this->getSaltByToken($params['pass'][0]);
-//		      echo "<br/>".$salt['salt']." is salt <br/>";
-//		      echo "msg:".$msg." has signature: ".$this->getSignature($salt['salt'],$msg)." and time: ".time();
-//		      echo "<br/>".$params['pass'][0];
 		      if($user_id = $this->validateRequest($params['pass'][0], $msg, $params['url']['expire'], $params['url']['s'],$type)){
 			return $user_id;
                       } else {
@@ -181,11 +163,6 @@
 		      $msg = $params['url']['expire'].':'.$params['url']['url'].':'.$params['url']['user_id'];
                     }
 		    if($type=='user_id'){
-//                      $salt = $this->getSaltByUserId($params['url']['user_id']);
-//		    echo "<br/>".$salt['salt']." is salt <br/>";
-//		    echo "msg:".$msg." has signature: ".$this->getSignature($salt['salt'],$msg)." and time: ".time();
-//		    echo "<br/>";
-
                       if($user_id = $this->validateRequest($params['url']['user_id'], $msg, $params['url']['expire'], $params['url']['s'],$type)){
 			return $user_id;
                       } else { 
@@ -352,7 +329,8 @@
                   if((($min != '') && ($len < $min)) || (($max != '') && ($len > $max))){
                     return FALSE;
 		  }
-/***		  if(($string+300)<time()){
+/***		  //dont check time, since some people set their clocks to manual =(
+                  if(($string+300)<time()){
 		    return FALSE;
 		  }
 		  if(($string-300)>time()){
